@@ -1,22 +1,6 @@
 // Creating our initial map object
 // We set the longitude, latitude, and the starting zoom level
 // This gets inserted into the div with an id of 'map'
-var myMap = L.map("map", {
-    center: [38.9072, -77.0369],
-    zoom: 15
-  });
-
-  // Adding a tile layer (the background map image) to our map
-// We use the addTo method to add objects to our map
-L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-    attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
-    tileSize: 512,
-    maxZoom: 18,
-    zoomOffset: -1,
-    id: "mapbox/streets-v11",
-    accessToken: API_KEY
-  }).addTo(myMap);
-
 var Alexandria = [
   [38.810357, -77.144359],
   [38.811136, -77.14375],
@@ -120,18 +104,6 @@ var Arlington = [
   [38.843806, -77.068331],
   [38.893245, -77.172276]
 ]
-
-L.polyline(Alexandria, {
-  color: "red",
-}).addTo(myMap);
-
-L.polyline(Falls_Church, {
-  color: "blue",
-}).addTo(myMap);
-
-L.polyline(Arlington, {
-  color: "green"
-}).addTo(myMap);
 
 var marker = [
   {'Location': ['38.805794', '-77.040055'], 'Property_Type': 'Townhouse', 'City': 'Alexandria', 'Zip_Code': '22314', 'Price': '1300000'},
@@ -993,54 +965,61 @@ var marker = [
   {'Location': ['38.8437982', '-77.114403'], 'Property_Type': 'Condo/Co-op', 'City': 'Falls Church', 'Zip_Code': '22041', 'Price': '220000'},
 ];
 
+var Housing_Group = [];
+
 for (var i = 0; i < marker.length; i++) {
   var listing = marker[i];
-  L.marker(listing.Location)
-  .bindPopup("<h1>" + listing.Property_Type + "</h1> <hr> <h3>Price " + listing.Price + "</h3>")  
-  .addTo(myMap);
+  Housing_Group.push(
+    L.marker(listing.Location)
+      .bindPopup("<h1>" + listing.Property_Type + "</h1> <hr> <h3>Price " + listing.Price + "</h3>")  
+  )
 }
 
-Top_Ten_Townhouse = [
-  {
-    Location: [38.803437, -77.041168],
-    City: 'Alexandria',
-    Type: "Townhouse"
-  },{
-    Location: [38.8903859, -77.0719387],
-    City: 'Arlington',
-    Type: "Townhouse"
-  },{
-    Location: [38.7967365, -77.0404011],
-    City: 'Alexandria',
-    Type: "Townhouse"
-  },{
-    Location: [38.7966641, -77.04205290000002],
-    City: 'Alexandria',
-    Type: "Townhouse"
-  },{
-    Location: [38.7998757, -77.04106170000001],
-    City: 'Alexandria',
-    Type: "Townhouse"
-  },{
-    Location: [38.80175620000001, -77.0406316],
-    City: 'Alexandria',
-    Type: "Townhouse"
-  },{
-    Location: [38.7959267,  -77.0430323],
-    City: 'Alexandria',
-    Type: "Townhouse"
-  },{
-    Location: [38.925531, -77.123762],
-    City: 'Arlington',
-    Type: "Townhouse"
-  },{
-    Location:[38.925151,  -77.124042],
-    City: 'Arlington',
-    Type: "Townhouse"
-  },{
-    Location:[38.8028628, -77.049048],
-    City: 'Alexandria',
-    Type: "Townhouse"
-  }
-]
+var Housing_Group_Layer = L.layerGroup(Housing_Group);
+
+var light = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+  attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+  tileSize: 512,
+  maxZoom: 18,
+  zoomOffset: -1,
+  id: "mapbox/streets-v11",
+  accessToken: API_KEY
+})
+
+var dark = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+maxZoom: 18,
+id: "dark-v10",
+accessToken: API_KEY
+});
+
+var baseMaps = {
+  Light: light,
+  Dark: dark
+};
+
+var overlayMaps = {
+  Houses: Housing_Group_Layer
+};
+
+var myMap = L.map("map", {
+    center: [38.9072, -77.0369],
+    zoom: 15,
+    layers: [light, dark]
+});  
+
+L.control.layers(baseMaps, overlayMaps).addTo(myMap);
+
+L.polyline(Alexandria, {
+  color: "red",
+}).addTo(myMap);
+  
+L.polyline(Falls_Church, {
+  color: "blue",
+}).addTo(myMap);
+  
+L.polyline(Arlington, {
+  color: "green"
+}).addTo(myMap);  
+
 
