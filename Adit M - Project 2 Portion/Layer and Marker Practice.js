@@ -1,6 +1,7 @@
 // Creating our initial map object
 // We set the longitude, latitude, and the starting zoom level
 // This gets inserted into the div with an id of 'map'
+//Establish polygon, housing and heatmap Coordinates
 var Alexandria = [
   [38.810357, -77.144359],
   [38.811136, -77.14375],
@@ -965,6 +966,7 @@ var marker = [
   {'Location': ['38.8437982', '-77.114403'], 'Property_Type': 'Condo/Co-op', 'City': 'Falls Church', 'Zip_Code': '22041', 'Price': '220000'},
 ];
 
+//Create the Housing pins and Layer
 var Housing_Group = [];
 
 for (var i = 0; i < marker.length; i++) {
@@ -974,9 +976,9 @@ for (var i = 0; i < marker.length; i++) {
       .bindPopup("<h1>" + listing.Property_Type + "</h1> <hr> <h3>Price " + listing.Price + "</h3>")  
   )
 }
-
 var Housing_Group_Layer = L.layerGroup(Housing_Group);
 
+//Create Light Layer
 var light = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
   attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
   tileSize: 512,
@@ -986,6 +988,7 @@ var light = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}
   accessToken: API_KEY
 })
 
+//Create Dark Layer
 var dark = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
 attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
 maxZoom: 18,
@@ -995,31 +998,221 @@ accessToken: API_KEY
 
 var baseMaps = {
   Light: light,
-  Dark: dark
+  Dark: dark,
 };
 
 var overlayMaps = {
-  Houses: Housing_Group_Layer
+  Houses: Housing_Group_Layer,
 };
 
 var myMap = L.map("map", {
-    center: [38.9072, -77.0369],
-    zoom: 15,
-    layers: [light, dark]
-});  
+  center: [38.9072, -77.0369],
+  zoom: 15,
+  layers: [light, dark]
+}); 
 
 L.control.layers(baseMaps, overlayMaps).addTo(myMap);
 
 L.polyline(Alexandria, {
   color: "red",
 }).addTo(myMap);
-  
+
 L.polyline(Falls_Church, {
   color: "blue",
 }).addTo(myMap);
-  
+
 L.polyline(Arlington, {
   color: "green"
-}).addTo(myMap);  
+}).addTo(myMap);
+
+function changeMap() {
+  var dropdownMenu = d3.select('#selDataset').node().value;
+  console.log(dropdownMenu)
+  if (dropdownMenu == "Townhouse") {
+    Townhouse(dropdownMenu)
+  }
+  else if (dropdownMenu == "Single-Family") {
+    Single_Family(dropdownMenu)
+  }
+  else if (dropdownMenu == "Condo/Co-Op") {
+    Condo(dropdownMenu)
+  }
+  else if (dropdownMenu == "Alexandria") {
+    Alexandria_Map(dropdownMenu)
+  }
+  else if (dropdownMenu == "Falls Church") {
+    Falls_Church_Map(dropdownMenu)
+  }
+  else if (dropdownMenu == "Arlington") {
+    Arlington_Map(dropdownMenu)
+  }
+  else if (dropdownMenu == "Alexandria/Townhouse")  {
+
+  }
+}
+
+function Townhouse(dropdownMenu) {
+  var Updated_Housing_Group = [];
+  for (var i = 0; i < marker.length; i++) {
+    var listing = marker[i];
+    if (listing.Property_Type == "Townhouse") {
+      Updated_Housing_Group.push(
+        L.marker(listing.Location)
+          .bindPopup("<h1>" + listing.Property_Type + "</h1> <hr> <h3>Price " + listing.Price + "</h3>")  
+      )
+    }
+  }
+  var Housing_Group_Layer = L.layerGroup(Updated_Housing_Group);
+  var overlayMaps = {
+    Houses: Housing_Group_Layer,
+  };
+  L.control.layers(baseMaps, overlayMaps).addTo(myMap);
+}
+
+function Single_Family(dropdownMenu) {
+  var Updated_Housing_Group = [];
+  for (var i = 0; i < marker.length; i++) {
+    var listing = marker[i];
+    if (listing.Property_Type == "Single Family Residential") {
+      Updated_Housing_Group.push(
+        L.marker(listing.Location)
+          .bindPopup("<h1>" + listing.Property_Type + "</h1> <hr> <h3>Price " + listing.Price + "</h3>")  
+      )
+    }
+  }
+  var Housing_Group_Layer = L.layerGroup(Updated_Housing_Group);
+  var overlayMaps = {
+    Houses: Housing_Group_Layer,
+  };
+  L.control.layers(baseMaps, overlayMaps).addTo(myMap);
+} 
+
+function Condo(dropdownMenu) {
+  var Updated_Housing_Group = [];
+  for (var i = 0; i < marker.length; i++) {
+    var listing = marker[i];
+    if (listing.Property_Type == "Condo/Co-op") {
+      Updated_Housing_Group.push(
+        L.marker(listing.Location)
+          .bindPopup("<h1>" + listing.Property_Type + "</h1> <hr> <h3>Price " + listing.Price + "</h3>")  
+      )
+    }
+  }
+  var Housing_Group_Layer = L.layerGroup(Updated_Housing_Group);
+  var overlayMaps = {
+    Houses: Housing_Group_Layer,
+  };
+  L.control.layers(baseMaps, overlayMaps).addTo(myMap);
+}
+
+function Alexandria(dropdownMenu) {
+  var Updated_Housing_Group = [];
+  for (var i = 0; i < marker.length; i++) {
+    var listing = marker[i];
+    if (listing.Property_Type == "Townhouse") {
+      Updated_Housing_Group.push(
+        L.marker(listing.Location)
+          .bindPopup("<h1>" + listing.Property_Type + "</h1> <hr> <h3>Price " + listing.Price + "</h3>")  
+      )
+    }
+  }
+  var Housing_Group_Layer = L.layerGroup(Updated_Housing_Group);
+  var overlayMaps = {
+    Houses: Housing_Group_Layer,
+  };
+  L.control.layers(baseMaps, overlayMaps).addTo(myMap);
+}
+
+function Alexandria(dropdownMenu) {
+  var Updated_Housing_Group = [];
+  for (var i = 0; i < marker.length; i++) {
+    var listing = marker[i];
+    if (listing.Property_Type == "Townhouse") {
+      Updated_Housing_Group.push(
+        L.marker(listing.Location)
+          .bindPopup("<h1>" + listing.Property_Type + "</h1> <hr> <h3>Price " + listing.Price + "</h3>")  
+      )
+    }
+  }
+  var Housing_Group_Layer = L.layerGroup(Updated_Housing_Group);
+  var overlayMaps = {
+    Houses: Housing_Group_Layer,
+  };
+  L.control.layers(baseMaps, overlayMaps).addTo(myMap);
+}
+
+function Single_Family(dropdownMenu) {
+  var Updated_Housing_Group = [];
+  for (var i = 0; i < marker.length; i++) {
+    var listing = marker[i];
+    if (listing.Property_Type == "Single Family Residential") {
+      Updated_Housing_Group.push(
+        L.marker(listing.Location)
+          .bindPopup("<h1>" + listing.Property_Type + "</h1> <hr> <h3>Price " + listing.Price + "</h3>")  
+      )
+    }
+  }
+  var Housing_Group_Layer = L.layerGroup(Updated_Housing_Group);
+  var overlayMaps = {
+    Houses: Housing_Group_Layer,
+  };
+  L.control.layers(baseMaps, overlayMaps).addTo(myMap);
+} 
+
+function Alexandria_Map(dropdownMenu) {
+  var Updated_Housing_Group = [];
+  for (var i = 0; i < marker.length; i++) {
+    var listing = marker[i];
+    if (listing.City == "Alexandria") {
+      Updated_Housing_Group.push(
+        L.marker(listing.Location)
+          .bindPopup("<h1>" + listing.Property_Type + "</h1> <hr> <h3>Price " + listing.Price + "</h3>")  
+      )
+    }
+  }
+  var Housing_Group_Layer = L.layerGroup(Updated_Housing_Group);
+  var overlayMaps = {
+    Houses: Housing_Group_Layer,
+  };
+  L.control.layers(baseMaps, overlayMaps).addTo(myMap);
+}
+
+function Falls_Church_Map(dropdownMenu) {
+  var Updated_Housing_Group = [];
+  for (var i = 0; i < marker.length; i++) {
+    var listing = marker[i];
+    if (listing.City == "Falls Church") {
+      Updated_Housing_Group.push(
+        L.marker(listing.Location)
+          .bindPopup("<h1>" + listing.Property_Type + "</h1> <hr> <h3>Price " + listing.Price + "</h3>")  
+      )
+    }
+  }
+  var Housing_Group_Layer = L.layerGroup(Updated_Housing_Group);
+  var overlayMaps = {
+    Houses: Housing_Group_Layer,
+  };
+  L.control.layers(baseMaps, overlayMaps).addTo(myMap);
+}
+
+function Arlington_Map(dropdownMenu) {
+  var Updated_Housing_Group = [];
+  for (var i = 0; i < marker.length; i++) {
+    var listing = marker[i];
+    if (listing.City == "Arlington") {
+      Updated_Housing_Group.push(
+        L.marker(listing.Location)
+          .bindPopup("<h1>" + listing.Property_Type + "</h1> <hr> <h3>Price " + listing.Price + "</h3>")  
+      )
+    }
+  }
+  var Housing_Group_Layer = L.layerGroup(Updated_Housing_Group);
+  var overlayMaps = {
+    Houses: Housing_Group_Layer,
+  };
+  L.control.layers(baseMaps, overlayMaps).addTo(myMap);
+}
 
 
+
+d3.select("#selDataset").on("change", changeMap);

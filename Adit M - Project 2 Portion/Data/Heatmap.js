@@ -152,9 +152,8 @@ Top_Ten_Expensive_Houses= [
         City:'Arlington',
         Type:"Multi-Family (2-4 Unit)"
     }
-  ]
+]
 
-  
 
 
 
