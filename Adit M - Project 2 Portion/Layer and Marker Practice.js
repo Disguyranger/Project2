@@ -1110,56 +1110,29 @@ function Townhouse(dropdownMenu) {
   for (var i = 0; i < marker.length; i++) {
     var listing = marker[i];
     if (listing.Property_Type == "Townhouse") {
-      Updated_Housing_Group.push(
-        L.marker(listing.Location)
-          .bindPopup("<h1>" + listing.Property_Type + "</h1> <hr> <h3>Price " + listing.Price + "</h3>")  
-      )
+      Updated_Housing_Group.push([listing.Location[0], listing.Location[1]]);
     }
-  }
-  var Housing_Group_Layer = L.layerGroup(Updated_Housing_Group, {
-    radius: 20,
-    blur: 35
-  });
-  var overlayMaps = {
-    Houses: Housing_Group_Layer,
-  };
-  L.control.layers(baseMaps, overlayMaps).addTo(myMap);
-}
 
-function Single_Family(dropdownMenu) {
-  var Updated_Housing_Group = [];
-  for (var i = 0; i < marker.length; i++) {
-    var listing = marker[i];
-    if (listing.Property_Type == "Single Family Residential") {
-      Updated_Housing_Group.push(
-        L.marker(listing.Location)
-          .bindPopup("<h1>" + listing.Property_Type + "</h1> <hr> <h3>Price " + listing.Price + "</h3>")  
-      )
-    }
+    var heat = L.heatLayer(Updated_Housing_Group, {
+      radius: 7,
+      blur: 2
+    }).addTo(myMap);
   }
-  var Housing_Group_Layer = L.layerGroup(Updated_Housing_Group);
-  var overlayMaps = {
-    Houses: Housing_Group_Layer,
-  };
-  L.control.layers(baseMaps, overlayMaps).addTo(myMap);
-} 
+}
 
 function Condo(dropdownMenu) {
   var Updated_Housing_Group = [];
   for (var i = 0; i < marker.length; i++) {
     var listing = marker[i];
     if (listing.Property_Type == "Condo/Co-op") {
-      Updated_Housing_Group.push(
-        L.marker(listing.Location)
-          .bindPopup("<h1>" + listing.Property_Type + "</h1> <hr> <h3>Price " + listing.Price + "</h3>")  
-      )
+      Updated_Housing_Group.push([listing.Location[0], listing.Location[1]]);
     }
+
+    var heat = L.heatLayer(Updated_Housing_Group, {
+      radius: 7,
+      blur: 2
+    }).addTo(myMap);
   }
-  var Housing_Group_Layer = L.layerGroup(Updated_Housing_Group);
-  var overlayMaps = {
-    Houses: Housing_Group_Layer,
-  };
-  L.control.layers(baseMaps, overlayMaps).addTo(myMap);
 }
 
 function Single_Family(dropdownMenu) {
@@ -1167,17 +1140,14 @@ function Single_Family(dropdownMenu) {
   for (var i = 0; i < marker.length; i++) {
     var listing = marker[i];
     if (listing.Property_Type == "Single Family Residential") {
-      Updated_Housing_Group.push(
-        L.marker(listing.Location)
-          .bindPopup("<h1>" + listing.Property_Type + "</h1> <hr> <h3>Price " + listing.Price + "</h3>")  
-      )
+      Updated_Housing_Group.push([listing.Location[0], listing.Location[1]]);
     }
+
+    var heat = L.heatLayer(Updated_Housing_Group, {
+      radius: 7,
+      blur: 2
+    }).addTo(myMap);
   }
-  var Housing_Group_Layer = L.layerGroup(Updated_Housing_Group);
-  var overlayMaps = {
-    Houses: Housing_Group_Layer,
-  };
-  L.control.layers(baseMaps, overlayMaps).addTo(myMap);
 } 
 
 function Alexandria_Map(dropdownMenu) {
